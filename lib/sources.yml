@@ -1,0 +1,98 @@
+# claude-signal-brief sources configuration
+#
+# Each source has:
+#   name:        Human-readable name (used in brief output)
+#   type:        Handler type — must match a registered handler in handlers/
+#   enabled:     true | false (default true if omitted)
+#   limit:       (optional) keep top-N items by score, after filter
+#   ... type-specific fields below ...
+#
+# Handler types currently registered:
+#   rss              — generic RSS/Atom feed
+#   rss-hn-daily     — HN daily digest (extracts "Points: N" for scoring)
+#   bash-curl-reddit — Reddit subreddit JSON
+#   github-mcp-releases  — GitHub releases for a repo
+#   github-mcp-trending  — GitHub search by stars + created date
+#   webfetch-diff    — URL sitemap diff against meta snapshot
+#   gmail            — Gmail-based newsletter ingest (disabled by default; needs OAuth setup)
+
+sources:
+
+  # --- RSS-shaped sources -----------------------------------------------------
+
+  - name: Hacker News Daily
+    type: rss-hn-daily
+    url: https://www.daemonology.net/hn-daily/index.rss
+    site: https://news.ycombinator.com
+    description: Top 5 stories per day from Hacker News
+    limit: 5
+    enabled: true
+
+  - name: n8n releases
+    type: rss
+    url: https://github.com/n8n-io/n8n/releases.atom
+    site: https://github.com/n8n-io/n8n
+    description: n8n core release feed
+    enabled: true
+
+  # --- GitHub sources ---------------------------------------------------------
+
+  - name: anthropics/claude-code releases
+    type: github-mcp-releases
+    owner: anthropics
+    repo: claude-code
+    window_days: 7
+    enabled: true
+
+  - name: GitHub trending — AI/agent focus
+    type: github-mcp-trending
+    languages: [Python, TypeScript, Go]
+    min_stars: 50
+    topics: [ai, llm, mcp, agents]
+    limit: 10
+    enabled: true
+
+  # --- Anthropic docs (sitemap diff) ------------------------------------------
+
+  - name: Anthropic docs
+    type: webfetch-diff
+    sitemap_url: https://docs.anthropic.com/sitemap.xml
+    cap: 20
+    enabled: true
+
+  # --- Reddit -----------------------------------------------------------------
+
+  - name: r/LocalLLaMA
+    type: bash-curl-reddit
+    sub: LocalLLaMA
+    window: day
+    min_score: 50
+    enabled: true
+
+  - name: r/ClaudeAI
+    type: bash-curl-reddit
+    sub: ClaudeAI
+    window: day
+    min_score: 50
+    enabled: true
+
+  - name: r/MachineLearning
+    type: bash-curl-reddit
+    sub: MachineLearning
+    window: day
+    min_score: 100
+    enabled: true
+
+  # --- Gmail (disabled by default; flip to true after running setup_gmail_oauth.py)
+
+  - name: AlphaSignal newsletter
+    type: gmail
+    sender: news@alphasignal.ai
+    window_days: 7
+    max_results: 10
+    enabled: false
+    # To enable:
+    #   1. Place GCP OAuth client JSON at ~/.gmail-mcp/gcp-oauth.keys.json
+    #   2. Run: python3 lib/setup_gmail_oauth.py
+    #   3. Set enabled: true above
+    # See README §First-run setup §4 for the full setup.

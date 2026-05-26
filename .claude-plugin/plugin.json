@@ -1,0 +1,12 @@
+{
+  "name": "claude-signal-brief",
+  "version": "0.1.0",
+  "description": "Curated daily/weekly digest of AI/dev signal from GitHub, Reddit, Anthropic docs, and (optionally) Gmail newsletters. Designed for Claude Code Desktop Local Routines.",
+  "author": {
+    "name": "Wiktor Potapczyk",
+    "url": "https://github.com/Wiktor-Potapczyk"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Wiktor-Potapczyk/claude-signal-brief",
+  "repository": "https://github.com/Wiktor-Potapczyk/claude-signal-brief"
+}
