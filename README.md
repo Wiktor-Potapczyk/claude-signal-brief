@@ -40,7 +40,8 @@ Defaults enabled: Hacker News Daily, n8n releases, anthropics/claude-code releas
 ### From Claude Code Desktop (recommended)
 
 ```
-/plugin install Wiktor-Potapczyk/claude-signal-brief
+claude plugin marketplace add Wiktor-Potapczyk/claude-signal-brief
+claude plugin install claude-signal-brief@claude-signal-brief
 ```
 
 ### From a clone (development)
