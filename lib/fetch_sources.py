@@ -28,6 +28,7 @@ import io
 import json
 import sys
 import traceback
+from datetime import datetime
 from pathlib import Path
 
 # Force UTF-8 stdout/stderr on Windows (default is cp1250 in PL locale and will
@@ -224,20 +225,39 @@ def run_daily() -> int:
 # ----------------------------------------------------------------------------
 
 
+def choose_week_window(weekday: int, current_count: int, prev_count: int) -> str:
+    """Decide whether a weekly brief should synthesize the current ISO week or
+    the just-completed previous week.
+
+    weekday: ISO weekday (Mon=1 .. Sun=7).
+
+    A weekly brief run on Monday is a week-in-review of the week that just
+    ended — on Monday the current ISO week holds at most one daily fetch, so
+    targeting it produces a one-day snapshot mislabeled as a week (the W23/W24
+    regression). On Monday we therefore prefer the previous week, provided it
+    actually has data. On other days we use the current week, preserving the
+    legacy sparse-fallback (current < 3 and previous is richer).
+    """
+    if weekday == 1 and prev_count > 0:
+        return "previous"
+    if current_count < 3 and prev_count > current_count:
+        return "previous"
+    return "current"
+
+
 def run_weekly() -> int:
     state_cfg = state_mod.load_config()
-    records = state_mod.records_for_week(None, state_cfg)
-    if len(records) < 3:
-        # Sparse — fall back to previous week
-        prev = state_mod.records_for_previous_week(state_cfg)
-        if len(prev) > len(records):
-            records = prev
+    current = state_mod.records_for_week(None, state_cfg)
+    prev = state_mod.records_for_previous_week(state_cfg)
+    weekday = datetime.now().isoweekday()
+    window = choose_week_window(weekday, len(current), len(prev))
+    records = prev if window == "previous" else current
 
     for r in records:
         print(json.dumps(r, ensure_ascii=False))
 
     print(
-        f"[fetch_sources weekly] items_in_window={len(records)}",
+        f"[fetch_sources weekly] items_in_window={len(records)} window={window} weekday={weekday}",
         file=sys.stderr,
     )
     return 0
