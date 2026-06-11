@@ -59,7 +59,7 @@ Carry the final `degraded` total into Step 4's Stats block.
 
 ### Step 4: Write daily digest file
 
-After Step 3 has summarised all new items, write a daily digest at `<output_dir>/team-signal-digest-YYYY-MM-DD.md` (output_dir from config, default `Inbox`).
+After Step 3 has summarised all new items, write a daily digest at `<output_dir>/claude-signal-digest-YYYY-MM-DD.md` (output_dir from config, default `Inbox`).
 
 Frontmatter:
 
@@ -110,7 +110,7 @@ Rules:
 After writing the digest file, output a single terse status line:
 
 ```
-Daily digest written: <output_dir>/team-signal-digest-YYYY-MM-DD.md  (K new, L deduped, M sources)
+Daily digest written: <output_dir>/claude-signal-digest-YYYY-MM-DD.md  (K new, L deduped, M sources)
 ```
 
 ## Notes

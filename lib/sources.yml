@@ -60,27 +60,32 @@ sources:
     cap: 20
     enabled: true
 
-  # --- Reddit -----------------------------------------------------------------
+  # --- Reddit (via public .rss feed) ------------------------------------------
+  # NOTE: Reddit's JSON API (/top.json) is OAuth-gated and returns HTTP 403 to
+  # unauthenticated/datacenter clients regardless of User-Agent, so the old
+  # `bash-curl-reddit` handler silently emitted 0 items. The public `/top/.rss`
+  # Atom feed is NOT IP-blocked. We point the generic `rss` handler at it.
+  # Trade-off: Atom carries no numeric score, so `min_score` is unavailable —
+  # but `/top/?t=day` is already pre-ranked by score, and `&limit=N` keeps the
+  # day's top-N. For numeric score gating, the upgrade path is a Reddit OAuth
+  # script app (client_id/secret) + a dedicated handler.
 
   - name: r/LocalLLaMA
-    type: bash-curl-reddit
-    sub: LocalLLaMA
-    window: day
-    min_score: 50
+    type: rss
+    url: https://www.reddit.com/r/LocalLLaMA/top/.rss?t=day&limit=10
+    window_days: 2
     enabled: true
 
   - name: r/ClaudeAI
-    type: bash-curl-reddit
-    sub: ClaudeAI
-    window: day
-    min_score: 50
+    type: rss
+    url: https://www.reddit.com/r/ClaudeAI/top/.rss?t=day&limit=10
+    window_days: 2
     enabled: true
 
   - name: r/MachineLearning
-    type: bash-curl-reddit
-    sub: MachineLearning
-    window: day
-    min_score: 100
+    type: rss
+    url: https://www.reddit.com/r/MachineLearning/top/.rss?t=day&limit=10
+    window_days: 2
     enabled: true
 
   # --- Gmail (disabled by default; flip to true after running setup_gmail_oauth.py)

@@ -1,5 +1,5 @@
 ---
-description: Synthesise the past 7 days of fetched signal into a weekly Markdown brief at <output_dir>/team-signal-brief-YYYY-Www.md
+description: Synthesise the past 7 days of fetched signal into a weekly Markdown brief at <output_dir>/claude-signal-brief-YYYY-Www.md
 argument-hint: (no arguments) — current ISO week is auto-detected
 allowed-tools: ["Read", "Write", "Edit", "Bash", "Grep"]
 ---
@@ -77,20 +77,9 @@ The blank `__` is for manual trial-scoring if you want to track signal quality o
 
 ### Step 5: Write
 
-Path: `<output_dir>/team-signal-brief-YYYY-Www.md`.
+Path: `<output_dir>/claude-signal-brief-YYYY-Www.md`.
 
 If file exists for this week: append a `## Update <HH:MM>` section instead of overwriting. First synth of the week is canonical; later re-runs are append-only updates.
-
-### Step 5b (optional): HTML render
-
-If the user wants a shareable/offline HTML copy of the brief (inline CSS, no JS):
-
-```bash
-python3 "${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/plugins/claude-signal-brief}/lib/render_html.py" \
-  "<output_dir>/team-signal-brief-YYYY-Www.md" "<output_dir>/team-signal-brief-YYYY-Www.html"
-```
-
-Markdown stays canonical; the HTML is an additive copy. Skip this step unless asked.
 
 ### Step 6: Report
 

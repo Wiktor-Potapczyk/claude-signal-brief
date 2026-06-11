@@ -27,7 +27,9 @@ from . import register, Item
 
 
 HTTP_TIMEOUT_SEC = 15
-USER_AGENT = "claude-signal-brief/0.1 (+rss-handler)"
+# Browser UA: Reddit's /top/.rss feed soft-throttles non-browser User-Agents
+# (intermittent timeouts), while plain feeds (GitHub/HN Atom) accept any UA.
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 DEFAULT_WINDOW_DAYS = 7
 
 
